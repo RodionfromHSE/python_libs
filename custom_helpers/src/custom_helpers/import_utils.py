@@ -2,6 +2,15 @@ import inspect
 import sys
 import os
 
+def _raise_error_if_in_ipython(msg: str) -> None:
+    """Raise an error if the code is running in IPython"""
+    try:
+        get_ipython()
+        raise RuntimeError(msg)
+    except NameError:
+        # get_ipython doesn't exist, so not running in IPython.
+        pass
+
 def add_root_to_pythonpath(n_up: int = 0, return_root: bool = False, verbose: bool = False) -> None | str:
     """
     Add the root directory to the sys.path (PYTHONPATH)
@@ -20,6 +29,7 @@ def add_root_to_pythonpath(n_up: int = 0, return_root: bool = False, verbose: bo
     # $DIR/.. is added to sys.path
     ... (other imports)
     """
+    _raise_error_if_in_ipython("add_root_to_pythonpath is not designed to be used in a Jupyter Notebook")
     caller_frame = inspect.stack()[1]
     caller_filename = caller_frame.filename
     caller_dir = os.path.dirname(caller_filename)
