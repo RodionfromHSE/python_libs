@@ -5,7 +5,7 @@ import os
 def _raise_error_if_in_ipython(msg: str) -> None:
     """Raise an error if the code is running in IPython"""
     try:
-        get_ipython()
+        get_ipython() # type: ignore
         raise RuntimeError(msg)
     except NameError:
         # get_ipython doesn't exist, so not running in IPython.
